@@ -39,13 +39,23 @@ go build
    ```
    This will detect your platform, locate your Claude Desktop configuration, and set up mcp-compose.
 
-2. **Export your current MCP servers:**
+2. **Browse and install MCP servers from the marketplace:**
    ```bash
-   mcp-compose dump > mcp-servers.yaml
+   # List all available servers
+   mcp-compose marketplace list
+
+   # Search for specific servers
+   mcp-compose marketplace search filesystem
+
+   # Install a server
+   mcp-compose marketplace install filesystem /path/to/your/project
    ```
 
-3. **Edit and apply changes:**
+3. **Or manage servers via YAML:**
    ```bash
+   # Export your current MCP servers
+   mcp-compose dump > mcp-servers.yaml
+
    # Edit the YAML file
    vim mcp-servers.yaml
 
@@ -166,6 +176,68 @@ The command will:
 4. Remove the server from the YAML file
 5. Optionally remove it from `~/.claude.json`
 
+## Marketplace Commands
+
+The marketplace commands allow you to browse and install MCP servers from the official [Model Context Protocol servers repository](https://github.com/modelcontextprotocol/servers).
+
+### Marketplace List
+
+List all available MCP servers from the marketplace:
+
+```bash
+mcp-compose marketplace list
+```
+
+This command will:
+- Fetch the latest list of MCP servers from the official repository
+- Cache the results locally for faster subsequent access
+- Display reference servers and official integrations
+- Show installation commands for each server
+
+### Marketplace Search
+
+Search for MCP servers by name or description:
+
+```bash
+mcp-compose marketplace search <query>
+```
+
+Examples:
+```bash
+# Search for filesystem-related servers
+mcp-compose marketplace search filesystem
+
+# Search for Git-related servers
+mcp-compose marketplace search git
+
+# Search for database servers
+mcp-compose marketplace search database
+```
+
+The search is case-insensitive and matches against both server names and descriptions.
+
+### Marketplace Install
+
+Install an MCP server from the marketplace:
+
+```bash
+mcp-compose marketplace install <server-name> <project-path>
+```
+
+Example:
+```bash
+mcp-compose marketplace install filesystem /home/user/workspace/my-project
+```
+
+The install command will:
+1. Search for the server in the marketplace
+2. Display server information and installation details
+3. Generate the MCP server configuration
+4. Ask for confirmation before applying changes
+5. Add the server to your Claude Desktop configuration for the specified project
+
+**Note:** You may need to restart Claude Desktop for changes to take effect.
+
 ## YAML Configuration Format
 
 The configuration is organized by project path. Each project can have its own MCP servers.
@@ -222,6 +294,20 @@ projects:
 ```
 
 ## Workflows
+
+### Installing from Marketplace
+
+1. Search for available servers:
+   ```bash
+   mcp-compose marketplace search <query>
+   ```
+
+2. Install the desired server:
+   ```bash
+   mcp-compose marketplace install <server-name> /path/to/your/project
+   ```
+
+3. Restart Claude Desktop to apply changes
 
 ### Managing Existing Configuration
 

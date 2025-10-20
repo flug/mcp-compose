@@ -28,9 +28,7 @@ func Dump() error {
 	for projectPath, projectConfig := range claudeConfig.Projects {
 		// Only include projects that have MCP servers
 		if len(projectConfig.MCPServers) > 0 {
-			yamlConfig.Projects[projectPath] = models.ProjectServers{
-				MCPServers: projectConfig.MCPServers,
-			}
+			yamlConfig.Projects[projectPath] = models.ProjectServers(projectConfig)
 		}
 	}
 

@@ -137,7 +137,7 @@ func Convert(jsonFile, projectPath string) error {
 		if err := os.WriteFile(tmpFile, yamlData, 0644); err != nil {
 			return fmt.Errorf("error creating temporary file: %w", err)
 		}
-		defer os.Remove(tmpFile)
+		defer func() { _ = os.Remove(tmpFile) }() //nolint:errcheck // Cleanup, error not critical
 
 		// Apply the configuration
 		if err := Apply(tmpFile); err != nil {

@@ -8,13 +8,13 @@ import (
 
 func TestValidateMCPServer(t *testing.T) {
 	tests := []struct {
-		name      string
+		name       string
 		serverName string
-		server    models.MCPServer
-		wantErr   bool
+		server     models.MCPServer
+		wantErr    bool
 	}{
 		{
-			name:      "valid stdio server",
+			name:       "valid stdio server",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type:    "stdio",
@@ -24,7 +24,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:      "valid http server",
+			name:       "valid http server",
 			serverName: "test-api",
 			server: models.MCPServer{
 				Type: "http",
@@ -33,7 +33,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:      "invalid type",
+			name:       "invalid type",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type:    "invalid",
@@ -42,7 +42,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:      "stdio without command",
+			name:       "stdio without command",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type: "stdio",
@@ -50,7 +50,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:      "http without URL",
+			name:       "http without URL",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type: "http",
@@ -58,7 +58,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:      "invalid scope",
+			name:       "invalid scope",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type:    "stdio",
@@ -68,7 +68,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:      "valid scope",
+			name:       "valid scope",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type:    "stdio",
@@ -78,7 +78,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:      "stdio with URL should fail",
+			name:       "stdio with URL should fail",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type:    "stdio",
@@ -88,7 +88,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:      "http with command should fail",
+			name:       "http with command should fail",
 			serverName: "test-server",
 			server: models.MCPServer{
 				Type:    "http",
@@ -98,7 +98,7 @@ func TestValidateMCPServer(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:      "empty server name",
+			name:       "empty server name",
 			serverName: "",
 			server: models.MCPServer{
 				Type:    "stdio",
