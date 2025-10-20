@@ -47,7 +47,10 @@ func Delete(yamlFile, serverName, projectPath string) error {
 
 	// Display server configuration
 	serverConfig := projectConfig.MCPServers[serverName]
-	serverYAML, _ := yaml.Marshal(map[string]models.MCPServer{serverName: serverConfig})
+	serverYAML, err := yaml.Marshal(map[string]models.MCPServer{serverName: serverConfig})
+	if err != nil {
+		return fmt.Errorf("error marshaling server config: %w", err)
+	}
 	fmt.Println("Configuration:")
 	fmt.Println("─────────────────────────────────────")
 	fmt.Print(string(serverYAML))
@@ -126,8 +129,9 @@ func Delete(yamlFile, serverName, projectPath string) error {
 					return fmt.Errorf("error updating ~/.claude.json: %w", err)
 				}
 
-				configPath, _ := config.GetClaudeConfigPath()
-				fmt.Printf("✓ Server '%s' deleted from %s\n", serverName, configPath)
+				if configPath, err := config.GetClaudeConfigPath(); err == nil {
+					fmt.Printf("✓ Server '%s' deleted from %s\n", serverName, configPath)
+				}
 			}
 		}
 	}

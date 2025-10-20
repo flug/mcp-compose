@@ -64,7 +64,7 @@ func Init() error {
 
 		fmt.Print("Do you want to reinitialize? [y/N]: ")
 		var response string
-		fmt.Scanln(&response)
+		_, _ = fmt.Scanln(&response) //nolint:errcheck // Input error not critical
 		if response != "y" && response != "Y" && response != "yes" {
 			fmt.Println("\nConfiguration unchanged.")
 			return nil

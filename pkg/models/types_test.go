@@ -47,8 +47,8 @@ func TestMCPServerJSONMarshaling(t *testing.T) {
 
 func TestMCPServerYAMLMarshaling(t *testing.T) {
 	server := MCPServer{
-		Type:    "http",
-		URL:     "https://api.example.com/mcp",
+		Type: "http",
+		URL:  "https://api.example.com/mcp",
 		Headers: map[string]string{
 			"Authorization": "Bearer token",
 		},

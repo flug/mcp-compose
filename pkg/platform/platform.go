@@ -10,12 +10,12 @@ import (
 
 // Info contains platform and user information
 type Info struct {
-	OS              string
-	Arch            string
-	Username        string
-	HomeDir         string
-	ClaudeConfigDir string
-	ClaudeConfig    string
+	OS               string
+	Arch             string
+	Username         string
+	HomeDir          string
+	ClaudeConfigDir  string
+	ClaudeConfig     string
 	MCPComposeConfig string
 }
 

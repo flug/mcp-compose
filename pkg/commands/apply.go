@@ -63,8 +63,9 @@ func Apply(yamlFile string) error {
 		return err
 	}
 
-	configPath, _ := config.GetClaudeConfigPath()
-	fmt.Printf("Successfully updated %s\n", configPath)
+	if configPath, err := config.GetClaudeConfigPath(); err == nil {
+		fmt.Printf("Successfully updated %s\n", configPath)
+	}
 	fmt.Printf("Updated %d project(s)\n", len(yamlConfig.Projects))
 
 	return nil

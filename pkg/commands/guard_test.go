@@ -22,19 +22,19 @@ func TestEnsureInitialized(t *testing.T) {
 	if platformInfo.MCPComposeConfigExists() {
 		data, err := os.ReadFile(originalConfigPath)
 		if err == nil {
-			os.WriteFile(backupPath, data, 0644)
+			_ = os.WriteFile(backupPath, data, 0644)
 			defer func() {
-				os.WriteFile(originalConfigPath, data, 0644)
-				os.Remove(backupPath)
+				_ = os.WriteFile(originalConfigPath, data, 0644)
+				_ = os.Remove(backupPath)
 			}()
 		}
 	}
 
 	tests := []struct {
-		name           string
-		configExists   bool
-		wantErr        bool
-		errContains    string
+		name         string
+		configExists bool
+		wantErr      bool
+		errContains  string
 	}{
 		{
 			name:         "config exists - should pass",
@@ -62,7 +62,7 @@ func TestEnsureInitialized(t *testing.T) {
 				}
 			} else {
 				// Remove config
-				os.Remove(originalConfigPath)
+				_ = os.Remove(originalConfigPath)
 			}
 
 			// Test
@@ -97,10 +97,10 @@ func TestCommandsRequireInit(t *testing.T) {
 	if platformInfo.MCPComposeConfigExists() {
 		backupData, _ = os.ReadFile(originalConfigPath)
 		hadConfig = true
-		os.Remove(originalConfigPath)
+		_ = os.Remove(originalConfigPath)
 		defer func() {
 			if hadConfig {
-				os.WriteFile(originalConfigPath, backupData, 0644)
+				_ = os.WriteFile(originalConfigPath, backupData, 0644)
 			}
 		}()
 	}
