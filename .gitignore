@@ -1,0 +1,29 @@
+# Binaries
+mcp-compose
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of go coverage
+*.out
+
+# Temporary files
+*.yaml
+*.json
+!go.mod
+!go.sum
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,130 @@
+name: Auto Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  auto-release:
+    name: Auto Release on PR Merge
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Determine version bump
+      id: version
+      run: |
+        # Get the latest tag
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+        echo "Latest tag: $LATEST_TAG"
+
+        # Remove 'v' prefix for version manipulation
+        VERSION=${LATEST_TAG#v}
+        IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+
+        # Check PR labels to determine version bump
+        PR_LABELS="${{ join(github.event.pull_request.labels.*.name, ',') }}"
+        echo "PR Labels: $PR_LABELS"
+
+        if echo "$PR_LABELS" | grep -q "major"; then
+          MAJOR=$((MAJOR + 1))
+          MINOR=0
+          PATCH=0
+          BUMP_TYPE="major"
+        elif echo "$PR_LABELS" | grep -q "minor\|feature\|enhancement"; then
+          MINOR=$((MINOR + 1))
+          PATCH=0
+          BUMP_TYPE="minor"
+        else
+          PATCH=$((PATCH + 1))
+          BUMP_TYPE="patch"
+        fi
+
+        NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+        echo "New version: $NEW_VERSION"
+        echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
+
+    - name: Build binaries
+      run: |
+        VERSION=${{ steps.version.outputs.version }}
+
+        # Build for multiple platforms
+        GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=$VERSION" -o mcp-compose-linux-amd64
+        GOOS=linux GOARCH=arm64 go build -ldflags "-X main.version=$VERSION" -o mcp-compose-linux-arm64
+        GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=$VERSION" -o mcp-compose-darwin-amd64
+        GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.version=$VERSION" -o mcp-compose-darwin-arm64
+        GOOS=windows GOARCH=amd64 go build -ldflags "-X main.version=$VERSION" -o mcp-compose-windows-amd64.exe
+        GOOS=windows GOARCH=arm64 go build -ldflags "-X main.version=$VERSION" -o mcp-compose-windows-arm64.exe
+
+        # Create checksums
+        sha256sum mcp-compose-* > checksums.txt
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.version.outputs.version }}
+        name: Release ${{ steps.version.outputs.version }}
+        body: |
+          ## Changes
+
+          ${{ github.event.pull_request.title }}
+
+          **PR:** #${{ github.event.pull_request.number }}
+          **Author:** @${{ github.event.pull_request.user.login }}
+          **Version Bump:** ${{ steps.version.outputs.bump_type }}
+
+          ### Description
+
+          ${{ github.event.pull_request.body }}
+
+          ---
+
+          ## Installation
+
+          Download the appropriate binary for your platform from the assets below.
+
+          **Linux:**
+          ```bash
+          wget https://github.com/flug/mcp-compose/releases/download/${{ steps.version.outputs.version }}/mcp-compose-linux-amd64
+          chmod +x mcp-compose-linux-amd64
+          sudo mv mcp-compose-linux-amd64 /usr/local/bin/mcp-compose
+          ```
+
+          **macOS:**
+          ```bash
+          wget https://github.com/flug/mcp-compose/releases/download/${{ steps.version.outputs.version }}/mcp-compose-darwin-arm64
+          chmod +x mcp-compose-darwin-arm64
+          sudo mv mcp-compose-darwin-arm64 /usr/local/bin/mcp-compose
+          ```
+
+          **Or install via Go:**
+          ```bash
+          go install github.com/flug/mcp-compose@${{ steps.version.outputs.version }}
+          ```
+        files: |
+          mcp-compose-*
+          checksums.txt
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
