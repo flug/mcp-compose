@@ -15,7 +15,7 @@ func printUsage() {
 	fmt.Fprintf(os.Stderr, "  %s convert <config.json> <project-path>              - Convert JSON MCP config to YAML and optionally apply\n", os.Args[0])
 	fmt.Fprintf(os.Stderr, "  %s delete <config.yaml> <server-name> <project-path> - Delete MCP server from YAML and optionally from Claude config\n", os.Args[0])
 	fmt.Fprintf(os.Stderr, "\nMarketplace commands:\n")
-	fmt.Fprintf(os.Stderr, "  %s marketplace list                                  - List all available MCP servers from marketplace\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "  %s marketplace list                                  - Browse and install MCP servers from marketplace (interactive)\n", os.Args[0])
 	fmt.Fprintf(os.Stderr, "  %s marketplace search <query>                        - Search for MCP servers in marketplace\n", os.Args[0])
 	fmt.Fprintf(os.Stderr, "  %s marketplace install <name> <project-path>         - Install an MCP server from marketplace\n", os.Args[0])
 }

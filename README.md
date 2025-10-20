@@ -41,13 +41,17 @@ go build
 
 2. **Browse and install MCP servers from the marketplace:**
    ```bash
-   # List all available servers
+   # Interactive browsing with checkboxes (recommended!)
    mcp-compose marketplace list
+   # 1. Browse 448+ servers from https://github.com/modelcontextprotocol/servers
+   # 2. Use arrow keys to navigate, space to select servers
+   # 3. Press enter, then provide your project path
+   # 4. Selected servers will be installed automatically
 
    # Search for specific servers
    mcp-compose marketplace search filesystem
 
-   # Install a server
+   # Install a single server directly
    mcp-compose marketplace install filesystem /path/to/your/project
    ```
 
@@ -182,17 +186,31 @@ The marketplace commands allow you to browse and install MCP servers from the of
 
 ### Marketplace List
 
-List all available MCP servers from the marketplace:
+Browse and install MCP servers from the marketplace with an interactive interface:
 
 ```bash
 mcp-compose marketplace list
 ```
 
 This command will:
-- Fetch the latest list of MCP servers from the official repository
+- Fetch the latest list of MCP servers from https://github.com/modelcontextprotocol/servers (448+ servers)
 - Cache the results locally for faster subsequent access
-- Display reference servers and official integrations
-- Show installation commands for each server
+- Display an **interactive TUI (Terminal User Interface) with checkboxes**
+- Allow you to select multiple servers using the spacebar
+- Ask for your project path after selection
+- Install all selected servers at once to your project
+
+**Interactive Controls:**
+- Use **arrow keys** to navigate through the server list
+- Press **space** to select/deselect a server
+- Press **right arrow** to select all
+- Press **left arrow** to deselect all
+- Start **typing** to filter servers by name or description
+- Press **enter** to confirm selection
+- Enter your **project path** when prompted
+- Selected servers will be installed automatically
+
+This is the recommended way to discover and install MCP servers!
 
 ### Marketplace Search
 
@@ -296,6 +314,26 @@ projects:
 ## Workflows
 
 ### Installing from Marketplace
+
+**Option 1: Interactive browsing (recommended)**
+
+1. Launch the interactive marketplace browser:
+   ```bash
+   mcp-compose marketplace list
+   ```
+
+2. Use the interactive TUI:
+   - Browse 448+ servers from the official MCP repository
+   - Navigate with arrow keys
+   - Select multiple servers with spacebar
+   - Filter by typing
+   - Press enter to confirm selection
+
+3. Enter your project path when prompted
+
+4. Restart Claude Desktop to apply changes
+
+**Option 2: Direct installation**
 
 1. Search for available servers:
    ```bash
